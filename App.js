@@ -446,7 +446,7 @@ const routePoints = [
     x: 20,
     y: 50,
     imageIndex: 1,
-    imageUrl: 'https://shokan.edu.kz/media/uploads/socialmediacontent/social-card.jpg',
+    imageUrl: 'https://shokan.edu.kz/media/images/21_917.original_3_bHhHJcl.original.format-webp.webp',
     imageCredit: 'shokan.edu.kz',
     description:
       'Научная часть: лаборатории, демонстрации и исследовательские задания для команд.',
@@ -755,11 +755,12 @@ function createRouteMapHtml(points, selectedPointId) {
     }
 
     .route-popup img {
-      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #eef7e8, #d9f4ef);
       border-radius: 8px;
       display: block;
+      height: 118px;
       margin-bottom: 9px;
-      object-fit: cover;
+      object-fit: contain;
       width: 100%;
     }
 
@@ -1245,32 +1246,39 @@ function SelectedPointCard({ point }) {
 
   return (
     <View style={styles.selectedCard}>
-      <Image
-        source={getPointImageSource(point)}
-        style={styles.selectedImage}
-        resizeMode="cover"
-      />
-      <View style={styles.selectedTop}>
-        <View style={[styles.selectedIcon, { backgroundColor: category.color }]}>
-          <Icon size={20} color="#ffffff" strokeWidth={2.4} />
+      <View style={styles.selectedContent}>
+        <View style={styles.selectedImageFrame}>
+          <Image
+            source={getPointImageSource(point)}
+            style={styles.selectedImage}
+            resizeMode="contain"
+          />
         </View>
-        <View style={styles.selectedTitleBlock}>
-          <Text style={styles.selectedKicker}>
-            {day.date} · {point.time}
-          </Text>
-          <Text style={styles.selectedTitle}>{point.title}</Text>
-          <Text style={styles.selectedPlace}>{point.place}</Text>
-          <Text style={styles.selectedCoordinates}>{coordinateLabel}</Text>
+
+        <View style={styles.selectedBody}>
+          <View style={styles.selectedTop}>
+            <View style={[styles.selectedIcon, { backgroundColor: category.color }]}>
+              <Icon size={20} color="#ffffff" strokeWidth={2.4} />
+            </View>
+            <View style={styles.selectedTitleBlock}>
+              <Text style={styles.selectedKicker}>
+                {day.date} · {point.time}
+              </Text>
+              <Text style={styles.selectedTitle}>{point.title}</Text>
+              <Text style={styles.selectedPlace}>{point.place}</Text>
+              <Text style={styles.selectedCoordinates}>{coordinateLabel}</Text>
+            </View>
+          </View>
+
+          <Text style={styles.selectedDescription}>{point.description}</Text>
+
+          <View style={styles.factRow}>
+            <Sparkles size={18} color="#b45309" strokeWidth={2.2} />
+            <Text style={styles.factText}>{point.fact}</Text>
+          </View>
+          {point.imageCredit && <Text style={styles.photoCredit}>Фото: {point.imageCredit}</Text>}
         </View>
       </View>
-
-      <Text style={styles.selectedDescription}>{point.description}</Text>
-
-      <View style={styles.factRow}>
-        <Sparkles size={18} color="#b45309" strokeWidth={2.2} />
-        <Text style={styles.factText}>{point.fact}</Text>
-      </View>
-      {point.imageCredit && <Text style={styles.photoCredit}>Фото: {point.imageCredit}</Text>}
     </View>
   );
 }
@@ -1343,7 +1351,7 @@ function ProgramGallery({ onOpenImage }) {
             onPress={() => onOpenImage(image)}
             style={({ pressed }) => [styles.programCard, pressed && styles.pressed]}
           >
-            <Image source={image.source} style={styles.programImage} resizeMode="cover" />
+            <Image source={image.source} style={styles.programImage} resizeMode="contain" />
             <View style={styles.programMeta}>
               <Text style={styles.programTitle}>{image.title}</Text>
               <Text style={styles.programCaption}>{image.caption}</Text>
@@ -1832,12 +1840,27 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 10 },
     elevation: 2,
   },
+  selectedContent: {
+    gap: 14,
+    flexDirection: isDesktop ? 'row' : 'column',
+    alignItems: isDesktop ? 'stretch' : 'center',
+  },
+  selectedImageFrame: {
+    width: isDesktop ? 320 : '100%',
+    height: isDesktop ? 230 : isCompact ? 176 : 202,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#edf7e8',
+    borderWidth: 1,
+    borderColor: '#d6e9bd',
+  },
   selectedImage: {
     width: '100%',
-    height: isDesktop ? 260 : isCompact ? 178 : 205,
-    marginBottom: 14,
-    borderRadius: 8,
-    backgroundColor: '#d9f4ef',
+    height: '100%',
+  },
+  selectedBody: {
+    flex: 1,
+    alignSelf: 'stretch',
   },
   selectedTop: {
     flexDirection: 'row',
@@ -2052,7 +2075,7 @@ const styles = StyleSheet.create({
   programImage: {
     width: '100%',
     height: isCompact ? 285 : 318,
-    backgroundColor: '#edf7e8',
+    backgroundColor: '#f7fbef',
   },
   programMeta: {
     padding: 12,
